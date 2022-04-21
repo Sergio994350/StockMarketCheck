@@ -14,7 +14,6 @@ import com.sergio994350.stockmarketcheck.domain.model.IntradayInfo
 import kotlin.math.round
 import kotlin.math.roundToInt
 
-
 @Composable
 fun StockChart(
     infos: List<IntradayInfo> = emptyList(),
@@ -47,14 +46,14 @@ fun StockChart(
             drawContext.canvas.nativeCanvas.apply {
                 drawText(
                     hour.toString(),
-                    spacing + i + spacePerHour,
+                    spacing + i * spacePerHour,
                     size.height - 5,
                     textPaint
                 )
             }
         }
         val priceStep = (upperValue - lowerValue) / 5f
-        (0..5).forEach { i ->
+        (0..4).forEach { i ->
             drawContext.canvas.nativeCanvas.apply {
                 drawText(
                     round(lowerValue + priceStep * i).toString(),
@@ -67,7 +66,7 @@ fun StockChart(
         var lastX = 0f
         val strokePath = Path().apply {
             val height = size.height
-            for (i in infos.indices) {
+            for(i in infos.indices) {
                 val info = infos[i]
                 val nextInfo = infos.getOrNull(i + 1) ?: infos.last()
                 val leftRatio = (info.close - lowerValue) / (upperValue - lowerValue)
@@ -77,11 +76,13 @@ fun StockChart(
                 val y1 = height - spacing - (leftRatio * height).toFloat()
                 val x2 = spacing + (i + 1) * spacePerHour
                 val y2 = height - spacing - (rightRatio * height).toFloat()
-                if (i == 0) {
+                if(i == 0) {
                     moveTo(x1, y1)
                 }
-                lastX = (x1 + x2)
-                quadraticBezierTo(x1, y1, lastX / 2f, (y1 + y2) / 2f)
+                lastX = (x1 + x2) / 2f
+                quadraticBezierTo(
+                    x1, y1, lastX, (y1 + y2) / 2f
+                )
             }
         }
         val fillPath = android.graphics.Path(strokePath.asAndroidPath())
@@ -104,7 +105,10 @@ fun StockChart(
         drawPath(
             path = strokePath,
             color = graphColor,
-            style = Stroke(width = 3.dp.toPx(), cap = StrokeCap.Round)
+            style = Stroke(
+                width = 3.dp.toPx(),
+                cap = StrokeCap.Round
+            )
         )
     }
 }
