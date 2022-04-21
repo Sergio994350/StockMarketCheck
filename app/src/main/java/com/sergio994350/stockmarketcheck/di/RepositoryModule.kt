@@ -2,8 +2,10 @@ package com.sergio994350.stockmarketcheck.di
 
 import com.sergio994350.stockmarketcheck.data.csv.CSVParser
 import com.sergio994350.stockmarketcheck.data.csv.CompanyListingsParser
+import com.sergio994350.stockmarketcheck.data.csv.IntradayInfoParser
 import com.sergio994350.stockmarketcheck.data.repository.StockRepositoryImpl
 import com.sergio994350.stockmarketcheck.domain.model.CompanyListing
+import com.sergio994350.stockmarketcheck.domain.model.IntradayInfo
 import com.sergio994350.stockmarketcheck.domain.repository.StockRepository
 import dagger.Binds
 import dagger.Module
@@ -20,6 +22,12 @@ abstract class RepositoryModule {
     abstract fun bindCompanyListingsParser(
         companyListingsParser: CompanyListingsParser
     ): CSVParser<CompanyListing>
+
+    @Binds
+    @Singleton
+    abstract fun bindIntradayInfoParser(
+        intradayInfoParser: IntradayInfoParser
+    ): CSVParser<IntradayInfo>
 
     @Binds
     @Singleton
